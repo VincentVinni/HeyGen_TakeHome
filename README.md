@@ -11,7 +11,6 @@
 2. Create .env file and add the following variables:
     ```python
     "COMPLETION_DELAY": 10 # This variable can be tinkered with and reflects the amount of time the job takes to complete. 
-     
 3. Start the server with python server.py
 
 ///// Client Library Usage 
