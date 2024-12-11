@@ -11,6 +11,7 @@ class StatusClient:
         self.initial_delay = initial_delay or DEFAULT_INITIAL_DELAY
         self.timeout = timeout or DEFAULT_TIMEOUT
         self.session = requests.Session()
+        self.default_on_on_poll = on_poll
 
     def get_status(self):
         url = self.url 
@@ -49,9 +50,11 @@ class StatusClient:
                 time.sleep(delay)
                 delay = min(delay * delay_increase_rate, self.max_delay)
                 continue
-
+            
             if on_poll:
-                on_poll(status) # LOG Polled Status with custom function 
+                on_poll(status) # LOG Polled Status with custom function
+            else:
+                self.default_on_on_poll(status)
 
             # depending on the status, handle request appropriately (completed: job done, erro: raise error, pending: tune polling delay and try again)
             if status == "completed":
@@ -61,3 +64,7 @@ class StatusClient:
             elif status == "pending":
                 time.sleep(delay) # wait for the next poll
                 delay = min(delay * delay_increase_rate, self.max_delay)
+
+#helper function to log the status
+def on_poll(status):
+    print(f"[TEST LOG] Polled status: {status}")
